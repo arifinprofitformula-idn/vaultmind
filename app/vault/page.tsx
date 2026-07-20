@@ -2,6 +2,8 @@
 
 import EmptyVault from "@/components/EmptyVault";
 import Input from "@/components/Input";
+import PasswordHealthPanel from "@/components/PasswordHealthPanel";
+import PasswordHistoryModal from "@/components/PasswordHistoryModal";
 import PasswordStrengthBar from "@/components/PasswordStrengthBar";
 import Toast from "@/components/Toast";
 import VaultEntryCard from "@/components/VaultEntryCard";
@@ -14,6 +16,7 @@ import {
   sealVault,
   unlockVault,
   type EncryptedVault,
+  type PasswordHistoryEntry,
   type VaultEntry,
 } from "@/lib/vault-crypto";
 import {
@@ -88,11 +91,14 @@ export default function VaultPage() {
   const [toast, setToast] = useState<ToastState>(null);
   const [error, setError] = useState("");
   const [syncStatus, setSyncStatus] = useState<SyncStatus>("idle");
+  const [historyEntry, setHistoryEntry] = useState<VaultEntry | null>(null);
+  const [showHealth, setShowHealth] = useState(false);
 
   const keyRef = useRef<CryptoKey | null>(null);
   const vaultRef = useRef<EncryptedVault | null>(null);
   const lastActivityRef = useRef<number>(Date.now());
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const entryRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   const filteredEntries = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -350,9 +356,26 @@ export default function VaultPage() {
 
     try {
       const timestamp = nowIso();
+      const existingEntry = editingId
+        ? entries.find((entry) => entry.id === editingId)
+        : null;
+      const passwordChanged =
+        existingEntry && existingEntry.password !== form.password;
+
+      const historyUpdate: PasswordHistoryEntry[] | undefined =
+        passwordChanged
+          ? [
+              ...(existingEntry.passwordHistory || []),
+              {
+                password: existingEntry.password,
+                changedAt: existingEntry.updatedAt,
+              },
+            ]
+          : existingEntry?.passwordHistory;
+
       const nextEntry: VaultEntry = editingId
         ? {
-            ...entries.find((entry) => entry.id === editingId),
+            ...existingEntry,
             id: editingId,
             name: form.name.trim(),
             username: form.username.trim(),
@@ -360,9 +383,10 @@ export default function VaultPage() {
             url: form.url.trim() || undefined,
             notes: form.notes.trim() || undefined,
             category: form.category,
-            createdAt:
-              entries.find((entry) => entry.id === editingId)?.createdAt ??
-              timestamp,
+            passwordHistory: passwordChanged
+              ? historyUpdate
+              : existingEntry?.passwordHistory,
+            createdAt: existingEntry?.createdAt ?? timestamp,
             updatedAt: timestamp,
           }
         : {
@@ -476,6 +500,65 @@ export default function VaultPage() {
     lockVault();
     await logout();
     router.push("/auth/login");
+  }
+
+  async function handleRegeneratePassword(entryId: string, newPassword: string) {
+    const nextEntries = entries.map((e) =>
+      e.id === entryId
+        ? {
+            ...e,
+            password: newPassword,
+            updatedAt: nowIso(),
+            passwordHistory: [
+              ...(e.passwordHistory || []),
+              { password: e.password, changedAt: e.updatedAt },
+            ],
+          }
+        : e,
+    );
+    try {
+      await persistEntries(nextEntries);
+    } catch {
+      showError("Gagal menyimpan password baru.");
+      return;
+    }
+    showToast("Password baru dibuat & tersimpan.", "success");
+  }
+
+  function handleNavigateToEntry(entryId: string) {
+    // Scroll to the entry card
+    const el = entryRefs.current.get(entryId);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.classList.add("ring-2", "ring-cyan-400", "rounded-xl");
+      setTimeout(() => {
+        el.classList.remove("ring-2", "ring-cyan-400", "rounded-xl");
+      }, 2000);
+    }
+  }
+
+  async function handleRestoreHistory(entryId: string, oldPassword: string) {
+    const nextEntries = entries.map((e) =>
+      e.id === entryId
+        ? {
+            ...e,
+            password: oldPassword,
+            updatedAt: nowIso(),
+            passwordHistory: [
+              ...(e.passwordHistory || []),
+              { password: e.password, changedAt: e.updatedAt },
+            ],
+          }
+        : e,
+    );
+    try {
+      await persistEntries(nextEntries);
+    } catch {
+      showError("Gagal menyimpan password yang dipulihkan.");
+      return;
+    }
+    setHistoryEntry(null);
+    showToast("Password dipulihkan dari riwayat.", "success");
   }
 
   const syncLabel = {
@@ -647,6 +730,26 @@ export default function VaultPage() {
           </div>
         </header>
 
+        {vaultMode === "open" && entries.length > 0 && (
+          <div className="mt-4">
+            <button
+              onClick={() => setShowHealth(!showHealth)}
+              className="w-full rounded-2xl border border-slate-800 bg-slate-900/40 px-4 py-3 text-left text-sm font-semibold text-slate-200 hover:border-slate-700 transition-colors"
+            >
+              {showHealth ? "▾ Sembunyikan" : "▸ Lihat"} Password Health Report
+            </button>
+            {showHealth && (
+              <div className="mt-3">
+                <PasswordHealthPanel
+                  entries={entries}
+                  onNavigateToEntry={handleNavigateToEntry}
+                  onRegeneratePassword={handleRegeneratePassword}
+                />
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="mt-6 grid gap-6 lg:grid-cols-[380px_1fr]">
           <aside className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-6">
             <h2 className="text-xl font-black text-white">
@@ -776,13 +879,27 @@ export default function VaultPage() {
             <div className="mt-6 grid gap-4">
               {filteredEntries.length > 0 ? (
                 filteredEntries.map((entry) => (
-                  <VaultEntryCard
+                  <div
                     key={entry.id}
-                    entry={entry}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                    onCopy={handleCopy}
-                  />
+                    ref={(el) => {
+                      if (el) entryRefs.current.set(entry.id, el as HTMLDivElement);
+                    }}
+                    className="group relative transition-all duration-500"
+                  >
+                    <VaultEntryCard
+                      entry={entry}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                      onCopy={handleCopy}
+                    />
+                    <button
+                      onClick={() => setHistoryEntry(entry)}
+                      className="absolute right-3 top-3 rounded-lg bg-slate-800/80 px-2.5 py-1 text-[10px] font-semibold text-slate-400 opacity-0 group-hover:opacity-100 hover:bg-slate-700 hover:text-slate-200 transition-all"
+                      title="Riwayat password"
+                    >
+                      Riwayat
+                    </button>
+                  </div>
                 ))
               ) : (
                 <EmptyVault />
@@ -791,6 +908,14 @@ export default function VaultPage() {
           </section>
         </div>
       </div>
+
+      {historyEntry && (
+        <PasswordHistoryModal
+          entry={historyEntry}
+          onClose={() => setHistoryEntry(null)}
+          onRestore={handleRestoreHistory}
+        />
+      )}
     </main>
   );
 }

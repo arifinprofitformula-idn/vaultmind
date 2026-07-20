@@ -1,6 +1,11 @@
 // This module runs exclusively in the browser (Web Crypto API).
 // Do NOT import from Server Components or API routes.
 
+export type PasswordHistoryEntry = {
+  password: string;
+  changedAt: string;
+};
+
 export type VaultEntry = {
   id: string;
   name: string;
@@ -9,8 +14,25 @@ export type VaultEntry = {
   url?: string;
   notes?: string;
   category: "Email" | "Bank" | "Sosmed" | "Kerja" | "Lainnya";
+  passwordHistory?: PasswordHistoryEntry[];
   createdAt: string;
   updatedAt: string;
+};
+
+export type VaultHealthIssue = {
+  entryId: string;
+  entryName: string;
+  type: "weak" | "old" | "reused";
+  detail: string;
+};
+
+export type VaultHealthReport = {
+  totalEntries: number;
+  issues: VaultHealthIssue[];
+  weakCount: number;
+  oldCount: number;
+  reusedCount: number;
+  score: number; // 0-100
 };
 
 export type EncryptedVault = {
@@ -124,6 +146,12 @@ async function encryptEntries(
   };
 }
 
+function isPasswordHistoryEntry(value: unknown): boolean {
+  if (typeof value !== "object" || value === null) return false;
+  const h = value as Record<string, unknown>;
+  return typeof h.password === "string" && typeof h.changedAt === "string";
+}
+
 function isVaultEntry(value: unknown): value is VaultEntry {
   if (typeof value !== "object" || value === null) {
     return false;
@@ -138,6 +166,11 @@ function isVaultEntry(value: unknown): value is VaultEntry {
     "Lainnya",
   ];
 
+  const hasPasswordHistory =
+    entry.passwordHistory === undefined ||
+    (Array.isArray(entry.passwordHistory) &&
+      entry.passwordHistory.every(isPasswordHistoryEntry));
+
   return (
     typeof entry.id === "string" &&
     typeof entry.name === "string" &&
@@ -147,6 +180,7 @@ function isVaultEntry(value: unknown): value is VaultEntry {
     (entry.notes === undefined || typeof entry.notes === "string") &&
     typeof entry.category === "string" &&
     validCategories.includes(entry.category as VaultEntry["category"]) &&
+    hasPasswordHistory &&
     typeof entry.createdAt === "string" &&
     typeof entry.updatedAt === "string"
   );
@@ -272,4 +306,91 @@ export function scorePassword(password: string): PasswordScore {
 
 export function createEntryId(): string {
   return crypto.randomUUID();
+}
+
+// ============================================================
+// VAULT HEALTH REPORT
+// ============================================================
+
+const OLD_THRESHOLD_DAYS = 90;
+
+export function analyzeVaultHealth(entries: VaultEntry[]): VaultHealthReport {
+  const issues: VaultHealthIssue[] = [];
+  const passwordMap = new Map<string, string[]>(); // password -> entryIds
+
+  const now = Date.now();
+  const oldCutoff = now - OLD_THRESHOLD_DAYS * 24 * 60 * 60 * 1000;
+
+  for (const entry of entries) {
+    // Check weak passwords
+    const strength = scorePassword(entry.password);
+    if (strength.score < 55) {
+      issues.push({
+        entryId: entry.id,
+        entryName: entry.name,
+        type: "weak",
+        detail: `Password \"${strength.label.toLowerCase()}\" (skor ${strength.score})`,
+      });
+    }
+
+    // Check old passwords (not updated in 90+ days)
+    const updatedMs = new Date(entry.updatedAt).getTime();
+    if (updatedMs < oldCutoff) {
+      const daysOld = Math.floor(
+        (now - updatedMs) / (24 * 60 * 60 * 1000),
+      );
+      issues.push({
+        entryId: entry.id,
+        entryName: entry.name,
+        type: "old",
+        detail: `Terakhir diupdate ${daysOld} hari yang lalu`,
+      });
+    }
+
+    // Track for reuse detection
+    if (!passwordMap.has(entry.password)) {
+      passwordMap.set(entry.password, []);
+    }
+    passwordMap.get(entry.password)!.push(entry.name);
+  }
+
+  // Check reused passwords
+  for (const [, names] of passwordMap) {
+    if (names.length > 1) {
+      for (const name of names) {
+        const entry = entries.find((e) => e.name === name);
+        if (entry?.password && passwordMap.get(entry.password)?.length) {
+          // Only add once per entry
+          const alreadyTracked = issues.some(
+            (i) => i.entryId === entry.id && i.type === "reused",
+          );
+          if (!alreadyTracked) {
+            issues.push({
+              entryId: entry.id,
+              entryName: entry.name,
+              type: "reused",
+              detail: `Password sama dengan: ${passwordMap.get(entry.password)!.filter((n) => n !== entry.name).join(", ")}`,
+            });
+          }
+        }
+      }
+    }
+  }
+
+  const weakCount = issues.filter((i) => i.type === "weak").length;
+  const oldCount = issues.filter((i) => i.type === "old").length;
+  const reusedCount = issues.filter((i) => i.type === "reused").length;
+
+  // Score: start 100, subtract per issue (max penalty per category)
+  const penalty = Math.min(weakCount * 10, 30) + Math.min(oldCount * 5, 20) + Math.min(reusedCount * 15, 30);
+  const score = Math.max(0, 100 - penalty);
+
+  return {
+    totalEntries: entries.length,
+    issues,
+    weakCount,
+    oldCount,
+    reusedCount,
+    score,
+  };
 }
