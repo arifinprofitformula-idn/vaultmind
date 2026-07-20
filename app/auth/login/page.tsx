@@ -7,9 +7,9 @@ import {
   EyeOff,
   KeyRound,
   LockKeyhole,
-  Shield,
   UserPlus,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -97,13 +97,17 @@ export default function LoginPage() {
         <div className="mb-10 flex flex-col items-center text-center">
           <Link
             href="/"
-            className="mb-5 flex h-16 w-16 items-center justify-center rounded-xl border border-[#e1fdff]/20 bg-[#e1fdff]/10 text-[#e1fdff] shadow-[0_18px_45px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(225,253,255,0.12)]"
+            className="mb-5 inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#051424]"
           >
-            <Shield className="h-9 w-9" strokeWidth={2.4} />
+            <Image
+              src="/logo-vaultmind.webp"
+              alt="VaultMind Personal Password Manager"
+              width={360}
+              height={120}
+              priority
+              className="h-auto w-[150px] object-contain sm:w-[176px]"
+            />
           </Link>
-          <h1 className="text-4xl font-black tracking-tight text-[#e1fdff]">
-            VaultMind
-          </h1>
           <p className="mt-3 font-mono text-xs font-bold uppercase tracking-[0.32em] text-[#b9cacb]/75">
             Secure Session Entry
           </p>

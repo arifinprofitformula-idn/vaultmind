@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type Status = "loading" | "success" | "error";
@@ -67,6 +68,19 @@ export default function VerifyPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#050814] px-6 py-12 text-slate-100">
       <div className="w-full max-w-md rounded-[2rem] border border-white/10 bg-white/[0.045] p-8 text-center shadow-2xl shadow-cyan-950/20">
+        <Link
+          href="/"
+          className="mb-6 inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050814]"
+        >
+          <Image
+            src="/logo-vaultmind.webp"
+            alt="VaultMind Personal Password Manager"
+            width={360}
+            height={120}
+            priority
+            className="h-auto w-[150px] object-contain sm:w-[176px] mx-auto"
+          />
+        </Link>
         <p className="text-sm font-bold uppercase tracking-[0.22em] text-cyan-200">
           Verifikasi Email
         </p>

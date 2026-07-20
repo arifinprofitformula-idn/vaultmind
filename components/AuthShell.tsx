@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 type AuthShellProps = {
   eyebrow: string;
@@ -28,12 +29,16 @@ export default function AuthShell({
             <div className="mb-8">
               <Link
                 href="/"
-                className="inline-flex items-center gap-3 text-sm font-black text-slate-100"
+                className="inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1119]"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-500/30 bg-slate-200 text-sm font-black text-slate-950 shadow-[4px_5px_0_rgba(0,0,0,0.35)]">
-                  V
-                </span>
-                VaultMind
+                <Image
+                  src="/logo-vaultmind.webp"
+                  alt="VaultMind Personal Password Manager"
+                  width={360}
+                  height={120}
+                  priority
+                  className="h-auto w-[150px] object-contain sm:w-[176px]"
+                />
               </Link>
               <p className="mt-8 text-xs font-black uppercase text-cyan-200">
                 {eyebrow}

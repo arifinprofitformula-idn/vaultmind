@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowLeft, AtSign, Rocket, Shield } from "lucide-react";
+import { ArrowLeft, AtSign, Rocket } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 
@@ -67,13 +68,17 @@ export default function ForgotPasswordPage() {
         <div className="mb-8 flex flex-col items-center text-center">
           <Link
             href="/"
-            className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-[#00dbe7]/25 bg-[#122131]/70 text-[#00dbe7] shadow-[0_18px_45px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(225,253,255,0.1)] backdrop-blur-xl"
+            className="mb-6 inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#051424]"
           >
-            <Shield className="h-9 w-9" strokeWidth={2.4} />
+            <Image
+              src="/logo-vaultmind.webp"
+              alt="VaultMind Personal Password Manager"
+              width={360}
+              height={120}
+              priority
+              className="h-auto w-[150px] object-contain sm:w-[176px]"
+            />
           </Link>
-          <h1 className="text-4xl font-black tracking-tight text-[#e1fdff]">
-            VaultMind
-          </h1>
           <p className="mt-3 font-mono text-xs font-bold uppercase tracking-[0.24em] text-[#b9cacb]">
             Cyber-Security Protocol
           </p>

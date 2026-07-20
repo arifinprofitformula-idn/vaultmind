@@ -26,13 +26,19 @@ export function getJwtAccessSecret(): string {
   return getRequiredServerEnv("JWT_ACCESS_SECRET");
 }
 
+export function getMailketingConfig(): {
+  apiToken: string;
+  fromEmail: string;
+  fromName: string;
+} {
+  return {
+    apiToken: getRequiredServerEnv("MAILKETING_API_TOKEN"),
+    fromEmail: getRequiredServerEnv("MAILKETING_FROM_EMAIL"),
+    fromName: process.env.MAILKETING_FROM_NAME?.trim() || "VaultMind",
+  };
+}
+
 export function hasUsableSmtpConfig(): boolean {
-  return Boolean(
-    process.env.SMTP_HOST &&
-      process.env.SMTP_USER &&
-      process.env.SMTP_PASS &&
-      process.env.SMTP_FROM &&
-      process.env.SMTP_USER !== "email@kamu.com" &&
-      process.env.SMTP_PASS !== "app_password_gmail",
-  );
+  // Mailketing always used in production — this stays for backward compat
+  return Boolean(process.env.MAILKETING_API_TOKEN);
 }

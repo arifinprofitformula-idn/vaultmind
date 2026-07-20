@@ -162,7 +162,7 @@ function IconBadge({
 function Logo({ className = "" }: { className?: string }) {
   return (
     <Image
-      src="/logo-vaultmind.png"
+      src="/logo-vaultmind.webp"
       alt="VaultMind Personal Password Manager"
       width={360}
       height={120}

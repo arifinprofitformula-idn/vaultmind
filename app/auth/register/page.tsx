@@ -7,9 +7,9 @@ import {
   Eye,
   EyeOff,
   LockKeyhole,
-  Shield,
   ShieldCheck,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
@@ -173,9 +173,15 @@ export default function RegisterPage() {
       <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(rgba(0,242,255,0.36)_1px,transparent_1px)] [background-size:76px_76px]" />
 
       <header className="relative z-10 flex items-center justify-between px-5 py-7 md:px-16">
-        <Link href="/" className="flex items-center gap-3 text-white">
-          <Shield className="h-8 w-8 text-[#e1fdff]" strokeWidth={2.3} />
-          <span className="text-xl font-black tracking-tight">VaultMind</span>
+        <Link href="/" className="inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#051424]">
+          <Image
+            src="/logo-vaultmind.webp"
+            alt="VaultMind Personal Password Manager"
+            width={360}
+            height={120}
+            priority
+            className="h-auto w-[150px] object-contain sm:w-[176px]"
+          />
         </Link>
         <Link
           href="mailto:halo@vaultmind.id"
