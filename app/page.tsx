@@ -250,7 +250,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-6 min-h-0 lg:mt-0">
+          <div className="mt-6 hidden min-h-0 lg:mt-0 lg:block">
           <div className="rounded-2xl border border-white/12 bg-white/[0.045] p-3 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl sm:rounded-[2rem] sm:p-4">
             <div className="rounded-2xl border border-white/10 bg-[#080d19]/90 p-4 sm:rounded-[1.5rem] sm:p-5">
               <div className="flex items-center justify-between gap-4">
