@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;family=Geist:wght@100;300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#051424",
+                        "surface-container-low": "#0d1c2d",
+                        "on-surface-variant": "#b9cacb",
+                        "on-tertiary": "#263143",
+                        "surface-container-lowest": "#010f1f",
+                        "primary": "#e1fdff",
+                        "tertiary-fixed-dim": "#bcc7de",
+                        "surface-container": "#122131",
+                        "primary-container": "#00f2ff",
+                        "tertiary": "#f6f7ff",
+                        "background": "#051424",
+                        "tertiary-fixed": "#d8e3fb",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#233143",
+                        "outline": "#849495",
+                        "secondary-fixed-dim": "#c3c6d3",
+                        "primary-fixed-dim": "#00dbe7",
+                        "on-secondary": "#2c303a",
+                        "error": "#ffb4ab",
+                        "primary-fixed": "#74f5ff",
+                        "inverse-surface": "#d4e4fa",
+                        "on-tertiary-fixed": "#111c2d",
+                        "secondary-fixed": "#dfe2ef",
+                        "on-surface": "#d4e4fa",
+                        "on-primary": "#00363a",
+                        "surface-container-high": "#1c2b3c",
+                        "tertiary-container": "#d0dbf3",
+                        "on-tertiary-fixed-variant": "#3c475a",
+                        "on-tertiary-container": "#556074",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#006a71",
+                        "surface": "#051424",
+                        "surface-bright": "#2c3a4c",
+                        "on-secondary-fixed": "#181c25",
+                        "on-primary-fixed": "#002022",
+                        "outline-variant": "#3a494b",
+                        "on-background": "#d4e4fa",
+                        "secondary": "#c3c6d3",
+                        "inverse-primary": "#00696f",
+                        "on-secondary-fixed-variant": "#434751",
+                        "surface-variant": "#273647",
+                        "on-secondary-container": "#b5b8c5",
+                        "on-primary-fixed-variant": "#004f54",
+                        "surface-tint": "#00dbe7",
+                        "secondary-container": "#454953",
+                        "surface-container-highest": "#273647"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Space Grotesk"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-sm": ["Geist"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #051424;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(18, 33, 49, 0.6);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(0, 219, 231, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 20%, rgba(0, 219, 231, 0.05) 50%, transparent 80%);
+            animation: shimmer 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-30%) translateY(-30%); }
+            100% { transform: translateX(30%) translateY(30%); }
+        }
+
+        .input-glow:focus {
+            box-shadow: 0 0 15px rgba(0, 219, 231, 0.3);
+            border-color: #00dbe7;
+            background: rgba(5, 20, 36, 0.8);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .geometric-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(0, 219, 231, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 219, 231, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .shimmer-button {
+            position: relative;
+            background: #00dbe7;
+            color: #00363a;
+            font-weight: 700;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .shimmer-button:hover {
+            box-shadow: 0 0 25px rgba(0, 219, 231, 0.6);
+            transform: translateY(-1px);
+        }
+
+        .shimmer-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .shimmer-button:hover::after {
+            left: 100%;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-margin-mobile md:p-0">
+<!-- Subtle Geometric Background -->
+<div class="geometric-bg"></div>
+<div class="fixed inset-0 pointer-events-none opacity-20">
+<div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-fixed-dim blur-[120px] rounded-full"></div>
+<div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-on-primary-container blur-[120px] rounded-full"></div>
+</div>
+<!-- Main Container -->
+<main class="w-full max-w-[440px] z-10">
+<!-- Brand Anchor from TopNavBar logic -->
+<div class="flex flex-col items-center mb-10 space-y-2">
+<div class="text-primary flex items-center justify-center bg-primary/10 w-16 h-16 rounded-xl border border-primary/20 mb-4 shadow-[0_0_20px_rgba(0,219,231,0.2)]">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">VaultMind</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-70">Secure Session Entry</p>
+</div>
+<!-- Login Card -->
+<div class="glass-card rounded-xl p-8 shadow-2xl">
+<!-- Reference Image Placeholder as visual guide hint -->
+<div class="hidden">
+<img alt="Reference for Layout" class="opacity-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnOHr7BSOAlsRYqchydajrWcYoEFb885iohn74x7d7R72_Y9WLmc5axTfchG9_eqknQtHQHDqHOnmzuHABclQ2xlQmlYYL6TWN2LUV-TXZNVjdhEQF0pc4oyX_GF9G960YDj1Y1Yf4Dm8c5q8BFZAzGxTQa5Q3Ejuqx2wS_gcB8VGyy9odF1_NMdm9tEaGjUOEHWj4oPybW5SfCSv0zzcn5XisAdBfzqMEHQfCKOoiCrMN3_dcXMGBcevnlRzDgiRBuYr4hP06vq0"/>
+</div>
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-primary/80 block">Email Address</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">alternate_email</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg py-4 pl-12 pr-4 text-on-surface font-body-md input-glow outline-none transition-all placeholder:text-on-surface-variant/30" placeholder="name@company.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<label class="font-label-caps text-label-caps text-primary/80 block">Security Key</label>
+</div>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">lock</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg py-4 pl-12 pr-12 text-on-surface font-body-md input-glow outline-none transition-all placeholder:text-on-surface-variant/30" placeholder="••••••••" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="shimmer-button w-full py-4 rounded-lg font-label-caps text-label-caps uppercase tracking-widest mt-4" type="submit">
+                    Masuk
+                </button>
+</form>
+<!-- Bottom Actions -->
+<div class="mt-8 pt-6 border-t border-primary/10 flex flex-col items-center space-y-4">
+<div class="flex justify-between w-full">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors flex items-center" href="#">
+<span class="material-symbols-outlined text-[18px] mr-1">person_add</span>
+                        Daftar
+                    </a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors flex items-center" href="#">
+<span class="material-symbols-outlined text-[18px] mr-1">key_off</span>
+                        Lupa Password
+                    </a>
+</div>
+</div>
+</div>
+<!-- Footer Audit Branding -->
+<div class="mt-12 text-center opacity-40">
+<p class="font-body-sm text-body-sm text-secondary-fixed-dim">
+                © 2024 VaultMind Systems. Encrypted Connection.
+            </p>
+<div class="flex justify-center space-x-4 mt-2">
+<span class="font-label-caps text-[10px] text-primary border border-primary/20 px-2 py-1 rounded">AES-256</span>
+<span class="font-label-caps text-[10px] text-primary border border-primary/20 px-2 py-1 rounded">TLS 1.3</span>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                // Potential for adding reactive background particles on focus
+                console.log('Focus active - reinforcing glass shader');
+            });
+        });
+
+        // Simple mouse tracking for background depth
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            document.querySelector('.geometric-bg').style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+    </script>
+</body></html>

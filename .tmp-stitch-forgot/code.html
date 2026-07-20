@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VaultMind | Lupa Password</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;family=Geist:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --shimmer-gradient: linear-gradient(135deg, rgba(225, 253, 255, 0.1) 0%, rgba(225, 253, 255, 0.02) 50%, rgba(225, 253, 255, 0.1) 100%);
+        }
+
+        body {
+            background-color: #051424;
+            color: #d4e4fa;
+            font-family: 'Geist', sans-serif;
+            overflow: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(18, 33, 49, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 219, 231, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--shimmer-gradient);
+            background-size: 200% 200%;
+            animation: shimmerMove 8s ease infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes shimmerMove {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        .glow-cyan {
+            box-shadow: 0 0 25px rgba(0, 219, 231, 0.15);
+        }
+
+        .input-shimmer:focus {
+            border-color: #00dbe7;
+            box-shadow: 0 0 15px rgba(0, 219, 231, 0.3);
+            background: rgba(5, 20, 36, 0.8);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Ambient background glow */
+        .ambient-sphere {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 219, 231, 0.08) 0%, transparent 70%);
+            filter: blur(60px);
+            z-index: -2;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#051424",
+                    "surface-container-low": "#0d1c2d",
+                    "on-surface-variant": "#b9cacb",
+                    "on-tertiary": "#263143",
+                    "surface-container-lowest": "#010f1f",
+                    "primary": "#e1fdff",
+                    "tertiary-fixed-dim": "#bcc7de",
+                    "surface-container": "#122131",
+                    "primary-container": "#00f2ff",
+                    "tertiary": "#f6f7ff",
+                    "background": "#051424",
+                    "tertiary-fixed": "#d8e3fb",
+                    "error-container": "#93000a",
+                    "inverse-on-surface": "#233143",
+                    "outline": "#849495",
+                    "secondary-fixed-dim": "#c3c6d3",
+                    "primary-fixed-dim": "#00dbe7",
+                    "on-secondary": "#2c303a",
+                    "error": "#ffb4ab",
+                    "primary-fixed": "#74f5ff",
+                    "inverse-surface": "#d4e4fa",
+                    "on-tertiary-fixed": "#111c2d",
+                    "secondary-fixed": "#dfe2ef",
+                    "on-surface": "#d4e4fa",
+                    "on-primary": "#00363a",
+                    "surface-container-high": "#1c2b3c",
+                    "tertiary-container": "#d0dbf3",
+                    "on-tertiary-fixed-variant": "#3c475a",
+                    "on-tertiary-container": "#556074",
+                    "on-error": "#690005",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-container": "#006a71",
+                    "surface": "#051424",
+                    "surface-bright": "#2c3a4c",
+                    "on-secondary-fixed": "#181c25",
+                    "on-primary-fixed": "#002022",
+                    "outline-variant": "#3a494b",
+                    "on-background": "#d4e4fa",
+                    "secondary": "#c3c6d3",
+                    "inverse-primary": "#00696f",
+                    "on-secondary-fixed-variant": "#434751",
+                    "surface-variant": "#273647",
+                    "on-secondary-container": "#b5b8c5",
+                    "on-primary-fixed-variant": "#004f54",
+                    "surface-tint": "#00dbe7",
+                    "secondary-container": "#454953",
+                    "surface-container-highest": "#273647"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "margin-desktop": "64px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Space Grotesk"],
+                    "label-caps": ["JetBrains Mono"],
+                    "body-sm": ["Geist"],
+                    "body-md": ["Geist"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface flex items-center justify-center min-h-screen relative overflow-hidden px-margin-mobile md:px-0">
+<!-- Atmospheric Background Particles/Glow -->
+<div class="ambient-sphere top-[-10%] left-[-10%]"></div>
+<div class="ambient-sphere bottom-[-20%] right-[-10%]" style="background: radial-gradient(circle, rgba(0, 106, 113, 0.1) 0%, transparent 70%);"></div>
+<main class="w-full max-w-[480px] z-10">
+<!-- Brand Identity -->
+<div class="flex flex-col items-center mb-8">
+<div class="w-16 h-16 glass-panel rounded-xl flex items-center justify-center mb-6 glow-cyan">
+<span class="material-symbols-outlined text-primary-fixed-dim text-4xl" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">VaultMind</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-2 uppercase">Cyber-Security Protocol</p>
+</div>
+<!-- Reset Card -->
+<div class="glass-panel p-8 md:p-10 rounded-xl shadow-2xl border border-primary/10">
+<div class="mb-8">
+<h2 class="font-headline-lg text-headline-lg text-primary leading-tight">Lupa Password?</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-4 opacity-80">
+                    Masukkan email terdaftar Anda. Kami akan mengirimkan tautan untuk mengatur ulang akses keamanan Anda.
+                </p>
+</div>
+<form action="#" class="space-y-6" method="POST">
+<div>
+<label class="font-label-caps text-label-caps text-primary block mb-3" for="email">EMAIL ADDRESS</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-xl group-focus-within:text-primary-fixed-dim transition-colors">alternate_email</span>
+</div>
+<input class="w-full bg-surface-container-lowest/50 border border-outline-variant/30 rounded-lg py-4 pl-12 pr-4 text-on-surface font-body-md focus:outline-none focus:ring-0 input-shimmer transition-all duration-300 placeholder:text-on-surface-variant/40" id="email" name="email" placeholder="nama@perusahaan.com" required="" type="email"/>
+</div>
+</div>
+<button class="w-full bg-primary-fixed-dim hover:bg-primary-container text-on-primary font-label-caps text-label-caps py-5 rounded-lg transition-all duration-300 transform active:scale-95 shadow-[0_4px_20px_rgba(0,219,231,0.3)] hover:shadow-[0_4px_30px_rgba(0,219,231,0.5)] flex items-center justify-center gap-3" type="submit">
+                    KIRIM LINK RESET
+                    <span class="material-symbols-outlined text-sm">rocket_launch</span>
+</button>
+</form>
+<div class="mt-10 pt-8 border-t border-outline-variant/20 text-center">
+<a class="inline-flex items-center gap-2 font-body-sm text-body-sm text-on-surface-variant hover:text-primary-fixed-dim transition-colors group" href="#">
+<span class="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                    Ingat password? <span class="text-primary-fixed-dim font-medium">Masuk</span>
+</a>
+</div>
+</div>
+<!-- Footer Visual Hint -->
+<footer class="mt-8 flex flex-col items-center gap-4">
+<div class="flex gap-2">
+<div class="h-1 w-12 bg-primary-fixed-dim rounded-full opacity-50"></div>
+<div class="h-1 w-4 bg-outline-variant rounded-full opacity-20"></div>
+<div class="h-1 w-4 bg-outline-variant rounded-full opacity-20"></div>
+</div>
+<p class="font-label-caps text-[10px] text-on-surface-variant/40 tracking-[0.2em]">ENCRYPTED AES-256 SESSION</p>
+</footer>
+</main>
+<!-- UI Background Texture -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] mix-blend-overlay" style="background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');">
+</div>
+<script>
+        // Micro-interaction for the shimmer effect following the mouse
+        document.addEventListener('mousemove', (e) => {
+            const panels = document.querySelectorAll('.glass-panel');
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            panels.forEach(panel => {
+                const rect = panel.getBoundingClientRect();
+                const localX = x - rect.left;
+                const localY = y - rect.top;
+                
+                // Subtle glow highlight following mouse
+                if (localX > 0 && localX < rect.width && localY > 0 && localY < rect.height) {
+                    panel.style.boxShadow = `0 0 40px rgba(0, 219, 231, ${0.1 + (Math.random() * 0.05)})`;
+                } else {
+                    panel.style.boxShadow = '';
+                }
+            });
+        });
+    </script>
+</body></html>
