@@ -49,6 +49,7 @@ const categories: Array<VaultEntry["category"]> = [
   "Bank",
   "Sosmed",
   "Kerja",
+  "Tagihan",
   "Lainnya",
 ];
 
@@ -59,6 +60,7 @@ const emptyForm = {
   url: "",
   notes: "",
   category: "Lainnya" as VaultEntry["category"],
+  billingDueDay: "",
 };
 
 function nowIso() {
@@ -352,6 +354,20 @@ export default function VaultPage() {
       return;
     }
 
+    const parsedDueDay = form.billingDueDay ? Number(form.billingDueDay) : null;
+
+    if (form.category === "Tagihan") {
+      if (
+        !parsedDueDay ||
+        !Number.isInteger(parsedDueDay) ||
+        parsedDueDay < 1 ||
+        parsedDueDay > 31
+      ) {
+        showError("Tanggal jatuh tempo tagihan harus antara 1-31.");
+        return;
+      }
+    }
+
     setIsBusy(true);
 
     try {
@@ -383,6 +399,8 @@ export default function VaultPage() {
             url: form.url.trim() || undefined,
             notes: form.notes.trim() || undefined,
             category: form.category,
+            billingDueDay:
+              form.category === "Tagihan" ? parsedDueDay ?? undefined : undefined,
             passwordHistory: passwordChanged
               ? historyUpdate
               : existingEntry?.passwordHistory,
@@ -397,6 +415,8 @@ export default function VaultPage() {
             url: form.url.trim() || undefined,
             notes: form.notes.trim() || undefined,
             category: form.category,
+            billingDueDay:
+              form.category === "Tagihan" ? parsedDueDay ?? undefined : undefined,
             createdAt: timestamp,
             updatedAt: timestamp,
           };
@@ -423,6 +443,7 @@ export default function VaultPage() {
       url: entry.url ?? "",
       notes: entry.notes ?? "",
       category: entry.category,
+      billingDueDay: entry.billingDueDay ? String(entry.billingDueDay) : "",
     });
     setEditingId(entry.id);
   }
@@ -819,6 +840,34 @@ export default function VaultPage() {
                   ))}
                 </select>
               </label>
+              {form.category === "Tagihan" ? (
+                <label className="block">
+                  <span className="text-sm font-bold text-slate-200">
+                    Tanggal jatuh tempo (setiap bulan)
+                  </span>
+                  <select
+                    value={form.billingDueDay}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        billingDueDay: event.target.value,
+                      }))
+                    }
+                    className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/60"
+                  >
+                    <option value="">Pilih tanggal</option>
+                    {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                      <option key={day} value={day}>
+                        Tanggal {day}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="mt-2 text-xs text-slate-500">
+                    Tagihan ini akan dianggap jatuh tempo setiap tanggal
+                    tersebut tiap bulannya.
+                  </p>
+                </label>
+              ) : null}
               <label className="block">
                 <span className="text-sm font-bold text-slate-200">Catatan</span>
                 <textarea

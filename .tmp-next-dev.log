@@ -1,0 +1,248 @@
+
+> vaultmind@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+▲ Next.js 16.2.9 (Turbopack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+- Environments: .env.local
+✓ Ready in 499ms
+Warning: Custom Cache-Control headers detected for the following routes:
+  - /_next/static/:path*
+
+Setting a custom Cache-Control header can break Next.js development behavior.
+Creating turbopack project { dir: 'C:\\laragon\\www\\vaultmind', testMode: true }
+
+ GET / 200 in 1132ms (next.js: 434ms, application-code: 698ms)
+ POST /api/auth/login 200 in 1477ms (next.js: 696ms, application-code: 780ms)
+ GET / 200 in 91ms (next.js: 11ms, application-code: 80ms)
+ GET / 200 in 170ms (next.js: 13ms, application-code: 157ms)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html
+                          lang="id"
+                          className="h-full antialiased"
+-                         data-scribe-recorder-ready="true"
+                        >
+                          <body
+                            className="min-h-full flex flex-col font-sans"
+-                           cz-shortcut-listen="true"
+                          >
+                  ...
+ 
+ GET /auth/register 200 in 260ms (next.js: 109ms, proxy.ts: 91ms, application-code: 61ms)
+ POST /api/auth/refresh 401 in 98ms (next.js: 82ms, application-code: 16ms)
+ POST /api/auth/refresh 401 in 114ms (next.js: 103ms, application-code: 12ms)
+ GET /auth/login 200 in 163ms (next.js: 99ms, proxy.ts: 10ms, application-code: 53ms)
+✓ Compiled in 144ms
+ POST /api/auth/login 200 in 630ms (next.js: 9ms, application-code: 620ms)
+ GET /vault 200 in 1326ms (next.js: 1259ms, proxy.ts: 12ms, application-code: 55ms)
+ POST /api/auth/refresh 200 in 69ms (next.js: 12ms, application-code: 56ms)
+ POST /api/auth/refresh 401 in 73ms (next.js: 8ms, application-code: 65ms)
+ GET /vault 200 in 58ms (next.js: 10ms, proxy.ts: 8ms, application-code: 40ms)
+ GET /vault 200 in 67ms (next.js: 11ms, proxy.ts: 10ms, application-code: 46ms)
+ GET / 200 in 263ms (next.js: 26ms, application-code: 237ms)
+ GET /auth/register 200 in 63ms (next.js: 12ms, proxy.ts: 8ms, application-code: 43ms)
+ POST /api/auth/refresh 401 in 19ms (next.js: 7ms, application-code: 12ms)
+ POST /api/auth/refresh 401 in 39ms (next.js: 23ms, application-code: 16ms)
+ GET /auth/login 200 in 67ms (next.js: 14ms, proxy.ts: 9ms, application-code: 44ms)
+⚠ Fast Refresh had to perform a full reload when ./lib/auth-context.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./lib/auth-context.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+✓ Compiled in 112ms
+⚠ Fast Refresh had to perform a full reload when ./lib/auth-context.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /auth/login 200 in 177ms (next.js: 91ms, proxy.ts: 35ms, application-code: 52ms)
+ GET /auth/login 200 in 505ms (next.js: 9ms, proxy.ts: 4ms, application-code: 492ms)
+ GET / 200 in 323ms (next.js: 44ms, application-code: 279ms)
+ GET / 200 in 319ms (next.js: 250ms, application-code: 69ms)
+ GET / 200 in 324ms (next.js: 118ms, application-code: 206ms)
+ POST /api/auth/refresh 401 in 47ms (next.js: 36ms, application-code: 11ms)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html
+                          lang="id"
+                          className="h-full antialiased"
+-                         data-scribe-recorder-ready="true"
+                        >
+                          <body
+                            className="min-h-full flex flex-col font-sans"
+-                           cz-shortcut-listen="true"
+                          >
+                  ...
+ 
+ GET /vault 200 in 293ms (next.js: 206ms, proxy.ts: 11ms, application-code: 76ms)
+ POST /api/auth/refresh 200 in 131ms (next.js: 6ms, application-code: 125ms)
+ POST /api/auth/refresh 401 in 19ms (next.js: 6ms, application-code: 13ms)
+ GET /vault 200 in 40ms (next.js: 12ms, proxy.ts: 8ms, application-code: 20ms)
+ GET /auth/login 200 in 139ms (next.js: 10ms, proxy.ts: 9ms, application-code: 120ms)
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+      <LoadingBoundary name="login/" loading={null}>
+        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+          <RedirectBoundary>
+            <RedirectErrorBoundary router={{...}}>
+              <InnerLayoutRouter url="/auth/login" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} ...>
+                <SegmentViewNode type="page" pagePath="auth/login...">
+                  <SegmentTrieNode>
+                  <ClientPageRoot Component={function LoginPage} serverProvidedParams={{...}}>
+                    <LoginPage params={Promise} searchParams={Promise}>
+                      <main className="relative f...">
+                        <div>
+                        <div>
+                        <div>
+                        <section className="relative z...">
+                          <div>
+                          <div className="relative o...">
+                            <div>
+                            <form onSubmit={function handleSubmit} className="relative s...">
+                              <LoginField label="Email Address" type="email" value="" ...>
+                                <label className="block spac...">
+                                  <span>
+                                  <span className="group rela...">
+                                    <span>
+                                    <input
+                                      value=""
+                                      onChange={function onChange}
+                                      type="email"
+                                      autoComplete="email"
+                                      placeholder="name@company.com"
+                                      required={true}
+                                      className="w-full rounded-lg border border-[#3a494b]/70 bg-[#010f1f] py-4 pl-12 ..."
+-                                     fdprocessedid="knhtb"
+                                    >
+                              <LoginField label="Security Key" type="password" value="" ...>
+                                <label className="block spac...">
+                                  <span>
+                                  <span className="group rela...">
+                                    <span>
+                                    <input
+                                      value=""
+                                      onChange={function onChange}
+                                      type="password"
+                                      autoComplete="current-password"
+                                      placeholder="Password akun"
+                                      required={true}
+                                      className="w-full rounded-lg border border-[#3a494b]/70 bg-[#010f1f] py-4 pl-12 ..."
+-                                     fdprocessedid="7yzpkj"
+                                    >
+                                    <span className="absolute r...">
+                                      <button
+                                        type="button"
+                                        onClick={function onClick}
+                                        className="text-[#b9cacb] transition hover:text-[#00f2ff]"
+                                        aria-label="Tampilkan password"
+-                                       fdprocessedid="27u4a"
+                                      >
+                              <button
+                                type="submit"
+                                disabled={false}
+                                className="relative mt-4 w-full overflow-hidden rounded-lg bg-[#00dbe7] px-5 py-4 font..."
+-                               fdprocessedid="hywdso"
+                              >
++                               Masuk
+                            ...
+                          ...
+                ...
+              ...
+ 
+    at console.overrideMethod [as error] (chrome-extension://fmkadmapgofadopljbjfkapdkoienihi/build/installHook.js:1:174822) (chrome-extension://fmkadmapgofadopljbjfkapdkoienihi/build/installHook.js:1:174822)
+ POST /api/auth/login 200 in 659ms (next.js: 64ms, application-code: 595ms)
+ GET /vault 200 in 213ms (next.js: 14ms, proxy.ts: 7ms, application-code: 191ms)
+ POST /api/auth/login 200 in 629ms (next.js: 11ms, application-code: 617ms)
+ GET /vault 200 in 70ms (next.js: 10ms, proxy.ts: 9ms, application-code: 51ms)
+ POST /api/auth/refresh 200 in 58ms (next.js: 9ms, application-code: 49ms)
+ POST /api/auth/refresh 401 in 56ms (next.js: 8ms, application-code: 48ms)
+ GET /vault 200 in 36ms (next.js: 11ms, proxy.ts: 10ms, application-code: 15ms)
+ GET /vault 200 in 123ms (next.js: 15ms, proxy.ts: 7ms, application-code: 100ms)
+ POST /api/auth/refresh 200 in 68ms (next.js: 7ms, application-code: 60ms)
+ GET /api/vault/sync 404 in 154ms (next.js: 120ms, application-code: 34ms)
+✓ Compiled in 133ms
+ GET /vault 200 in 1189ms (next.js: 174ms, proxy.ts: 98ms, application-code: 917ms)
+ POST /api/vault/sync 200 in 839ms (next.js: 285ms, application-code: 554ms)
+ GET /vault 200 in 1609ms (next.js: 235ms, proxy.ts: 147ms, application-code: 1227ms)
+ GET /vault 200 in 1330ms (next.js: 376ms, proxy.ts: 604ms, application-code: 350ms)
+ GET /vault 200 in 865ms (next.js: 298ms, proxy.ts: 305ms, application-code: 262ms)
+ GET /vault 200 in 852ms (next.js: 347ms, proxy.ts: 294ms, application-code: 210ms)
+ GET /vault 200 in 845ms (next.js: 400ms, proxy.ts: 287ms, application-code: 158ms)
+ GET /vault 200 in 559ms (next.js: 44ms, proxy.ts: 447ms, application-code: 68ms)
+ GET / 200 in 2.5s (next.js: 399ms, application-code: 2.1s)
+ GET / 200 in 1918ms (next.js: 16ms, application-code: 1902ms)
+ GET / 200 in 1583ms (next.js: 53ms, application-code: 1530ms)
+ GET / 200 in 1582ms (next.js: 160ms, application-code: 1422ms)
+ GET / 200 in 1582ms (next.js: 262ms, application-code: 1320ms)
+ GET / 200 in 1582ms (next.js: 358ms, application-code: 1224ms)
+ GET / 200 in 238ms (next.js: 54ms, application-code: 183ms)
+ GET /vault 200 in 519ms (next.js: 45ms, proxy.ts: 411ms, application-code: 62ms)
+ GET / 200 in 524ms (next.js: 161ms, application-code: 363ms)
+✓ Compiled in 120ms
+ GET /vault 200 in 821ms (next.js: 167ms, proxy.ts: 360ms, application-code: 294ms)
+ GET /vault 200 in 97ms (next.js: 20ms, proxy.ts: 16ms, application-code: 62ms)
+ GET / 200 in 833ms (next.js: 150ms, application-code: 683ms)
+ GET / 200 in 475ms (next.js: 251ms, application-code: 224ms)
+ GET /vault 200 in 87ms (next.js: 17ms, proxy.ts: 11ms, application-code: 59ms)
+ GET /vault 200 in 89ms (next.js: 15ms, proxy.ts: 11ms, application-code: 63ms)

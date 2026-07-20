@@ -107,6 +107,7 @@ export default function ForgotPasswordPage() {
                     <AtSign className="h-6 w-6" />
                   </span>
                   <input
+                    suppressHydrationWarning
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     type="email"
@@ -138,6 +139,7 @@ export default function ForgotPasswordPage() {
               ) : null}
 
               <button
+                suppressHydrationWarning
                 type="submit"
                 disabled={isSubmitting}
                 className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#00dbe7] px-5 py-5 font-mono text-sm font-bold uppercase tracking-[0.24em] text-[#00363a] shadow-[0_20px_45px_rgba(0,0,0,0.42)] transition hover:bg-[#00f2ff] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"

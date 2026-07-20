@@ -82,6 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const refreshIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const refreshPromiseRef = useRef<Promise<boolean> | null>(null);
 
   const clearRefreshInterval = useCallback(() => {
     if (refreshIntervalRef.current) {
@@ -101,7 +102,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const refreshSession = useCallback(async (): Promise<boolean> => {
-    try {
+    if (refreshPromiseRef.current) {
+      return refreshPromiseRef.current;
+    }
+
+    const refreshPromise = (async () => {
       const response = await fetch("/api/auth/refresh", { method: "POST" });
 
       if (!response.ok) {
@@ -118,10 +123,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       applySession(data);
       return true;
-    } catch {
-      clearAuthState();
-      return false;
-    }
+    })()
+      .catch(() => {
+        clearAuthState();
+        return false;
+      })
+      .finally(() => {
+        refreshPromiseRef.current = null;
+      });
+
+    refreshPromiseRef.current = refreshPromise;
+    return refreshPromise;
   }, [applySession, clearAuthState]);
 
   const startRefreshInterval = useCallback(() => {

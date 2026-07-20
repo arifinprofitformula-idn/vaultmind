@@ -26,6 +26,11 @@ export default function VaultEntryCard({
             <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[11px] font-bold text-cyan-100">
               {entry.category}
             </span>
+            {entry.category === "Tagihan" && entry.billingDueDay ? (
+              <span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-2.5 py-1 text-[11px] font-bold text-amber-100">
+                Jatuh tempo tgl {entry.billingDueDay}
+              </span>
+            ) : null}
           </div>
           <p className="mt-2 truncate text-sm text-slate-400">{entry.username}</p>
           {entry.url ? (

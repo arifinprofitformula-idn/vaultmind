@@ -13,7 +13,8 @@ export type VaultEntry = {
   password: string;
   url?: string;
   notes?: string;
-  category: "Email" | "Bank" | "Sosmed" | "Kerja" | "Lainnya";
+  category: "Email" | "Bank" | "Sosmed" | "Kerja" | "Tagihan" | "Lainnya";
+  billingDueDay?: number;
   passwordHistory?: PasswordHistoryEntry[];
   createdAt: string;
   updatedAt: string;
@@ -163,6 +164,7 @@ function isVaultEntry(value: unknown): value is VaultEntry {
     "Bank",
     "Sosmed",
     "Kerja",
+    "Tagihan",
     "Lainnya",
   ];
 
@@ -180,6 +182,10 @@ function isVaultEntry(value: unknown): value is VaultEntry {
     (entry.notes === undefined || typeof entry.notes === "string") &&
     typeof entry.category === "string" &&
     validCategories.includes(entry.category as VaultEntry["category"]) &&
+    (entry.billingDueDay === undefined ||
+      (typeof entry.billingDueDay === "number" &&
+        entry.billingDueDay >= 1 &&
+        entry.billingDueDay <= 31)) &&
     hasPasswordHistory &&
     typeof entry.createdAt === "string" &&
     typeof entry.updatedAt === "string"

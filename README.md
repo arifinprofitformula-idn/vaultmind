@@ -50,4 +50,9 @@ ke database yang sama dengan `DATABASE_URL` di `.env.local`.
 npm run lint
 npm run build
 ```
-# vaultmind
+
+## Lisensi
+
+Proyek ini bersifat proprietary — lihat [LICENSE](LICENSE). Tidak ada izin
+untuk menyalin, memodifikasi, mendistribusikan, atau menggunakan kode ini
+tanpa izin tertulis dari Arva Digital Media.

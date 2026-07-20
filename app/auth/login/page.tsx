@@ -45,6 +45,7 @@ function LoginField({
           {icon}
         </span>
         <input
+          suppressHydrationWarning
           value={value}
           onChange={(event) => onChange(event.target.value)}
           type={type}
@@ -136,6 +137,7 @@ export default function LoginPage() {
               icon={<LockKeyhole className="h-6 w-6" />}
               rightAction={
                 <button
+                  suppressHydrationWarning
                   type="button"
                   onClick={() => setShowPassword((current) => !current)}
                   className="text-[#b9cacb] transition hover:text-[#00f2ff]"
@@ -159,6 +161,7 @@ export default function LoginPage() {
             ) : null}
 
             <button
+              suppressHydrationWarning
               type="submit"
               disabled={isSubmitting}
               className="relative mt-4 w-full overflow-hidden rounded-lg bg-[#00dbe7] px-5 py-4 font-mono text-sm font-bold uppercase tracking-[0.24em] text-[#00363a] shadow-[0_18px_45px_rgba(0,0,0,0.38)] transition hover:-translate-y-px hover:bg-[#74f5ff] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"

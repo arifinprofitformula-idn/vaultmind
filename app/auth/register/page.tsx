@@ -86,6 +86,7 @@ function CyberField({
           {icon}
         </span>
         <input
+          suppressHydrationWarning
           value={value}
           onChange={(event) => onChange(event.target.value)}
           type={type}
@@ -275,6 +276,7 @@ export default function RegisterPage() {
                     icon={<LockKeyhole className="h-6 w-6" />}
                     rightAction={
                       <button
+                        suppressHydrationWarning
                         type="button"
                         onClick={() => setShowPassword((current) => !current)}
                         className="text-[#b9cacb] transition hover:text-[#00f2ff]"
@@ -341,6 +343,7 @@ export default function RegisterPage() {
 
                 <div className="pt-4">
                   <button
+                    suppressHydrationWarning
                     type="submit"
                     disabled={isSubmitting}
                     className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#00f2ff] px-5 py-5 font-mono text-sm font-bold uppercase tracking-[0.22em] text-[#00363a] shadow-[0_18px_45px_rgba(0,0,0,0.38)] transition hover:bg-[#74f5ff] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
