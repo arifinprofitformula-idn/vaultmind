@@ -5,6 +5,7 @@ const navLinks = [
   { label: "Fitur", href: "#fitur" },
   { label: "Keamanan", href: "#keamanan" },
   { label: "Harga", href: "#harga" },
+  { label: "Extension", href: "/extension" },
 ];
 
 const workSteps = [

@@ -252,3 +252,4 @@ https://react.dev/link/hydration-mismatch
  GET /vault 200 in 67ms (next.js: 13ms, proxy.ts: 8ms, application-code: 46ms)
  POST /api/auth/refresh 200 in 44ms (next.js: 16ms, application-code: 28ms)
  GET /api/vault/sync 200 in 95ms (next.js: 39ms, application-code: 56ms)
+✓ Compiled in 933ms

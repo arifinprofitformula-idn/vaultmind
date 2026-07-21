@@ -1,7 +1,6 @@
 "use client";
 
 import EmptyVault from "@/components/EmptyVault";
-import Input from "@/components/Input";
 import PasswordHealthPanel from "@/components/PasswordHealthPanel";
 import PasswordHistoryModal from "@/components/PasswordHistoryModal";
 import PasswordStrengthBar from "@/components/PasswordStrengthBar";
@@ -27,6 +26,20 @@ import {
   saveStoredVault,
 } from "@/lib/vault-store";
 import { downloadVault, uploadVault } from "@/lib/vault-sync";
+import {
+  Download,
+  Eye,
+  EyeOff,
+  FileUp,
+  KeyRound,
+  Lock,
+  LogOut,
+  Search,
+  Shield,
+  ShieldCheck,
+  Sparkles,
+  Trash2,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
   ChangeEvent,
@@ -52,6 +65,20 @@ const categories: Array<VaultEntry["category"]> = [
   "Tagihan",
   "Lainnya",
 ];
+
+const fieldClass =
+  "mt-2 w-full rounded-lg border border-[#3b494b] bg-[#32353c] px-4 py-3 text-sm font-semibold text-[#e1e2eb] outline-none transition placeholder:text-[#849495] focus:border-[#00dbe9] focus:shadow-[0_0_0_3px_rgba(0,219,233,0.12)]";
+
+const selectClass =
+  "mt-2 w-full rounded-lg border border-[#3b494b] bg-[#32353c] px-4 py-3 text-sm font-semibold text-[#e1e2eb] outline-none transition focus:border-[#00dbe9] focus:shadow-[0_0_0_3px_rgba(0,219,233,0.12)]";
+
+const labelClass = "text-xs font-semibold text-[#b9cacb]";
+
+const primaryButtonClass =
+  "inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00dbe9] to-[#006970] px-4 py-3 text-sm font-black text-[#05070a] transition hover:shadow-[0_0_24px_rgba(0,219,233,0.22)] disabled:opacity-60";
+
+const secondaryButtonClass =
+  "inline-flex items-center justify-center gap-2 rounded-xl border border-[#3b494b] bg-transparent px-4 py-3 text-sm font-bold text-[#e1e2eb] transition hover:border-[#00dbe9] hover:bg-[#00dbe9]/5";
 
 const emptyForm = {
   name: "",
@@ -95,6 +122,8 @@ export default function VaultPage() {
   const [syncStatus, setSyncStatus] = useState<SyncStatus>("idle");
   const [historyEntry, setHistoryEntry] = useState<VaultEntry | null>(null);
   const [showHealth, setShowHealth] = useState(false);
+  const [showMasterPassword, setShowMasterPassword] = useState(false);
+  const [showEntryPassword, setShowEntryPassword] = useState(false);
 
   const keyRef = useRef<CryptoKey | null>(null);
   const vaultRef = useRef<EncryptedVault | null>(null);
@@ -588,13 +617,26 @@ export default function VaultPage() {
     synced: "Tersinkron",
     offline: "Offline",
   }[syncStatus];
+  const billCount = entries.filter((entry) => entry.category === "Tagihan").length;
+  const categoryCount = new Set(entries.map((entry) => entry.category)).size;
+  const syncTone =
+    syncStatus === "synced"
+      ? "border-[#00dbe9] bg-[#00dbe9]/10 text-[#7df4ff]"
+      : syncStatus === "offline"
+        ? "border-[#ffb4ab] bg-[#ffb4ab]/10 text-[#ffb4ab]"
+        : "border-[#3b494b] bg-[#1d2026] text-[#b9cacb]";
 
   if (isLoading || vaultMode === "loading") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#050814] text-slate-100">
-        <div className="text-center">
-          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-2 border-cyan-300/20 border-t-cyan-300" />
-          <p className="mt-4 text-sm text-slate-400">Menyiapkan vault...</p>
+      <main className="flex min-h-screen items-center justify-center overflow-hidden bg-[#05070a] px-4 py-10 text-[#e1e2eb]">
+        <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_22%,rgba(0,219,233,0.16),transparent_28%),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(0deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[length:auto,72px_72px,72px_72px]" />
+        <div className="relative text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-[#00dbe9]/30 bg-[#0b0e14]/70 shadow-[0_0_34px_rgba(0,219,233,0.18)] backdrop-blur-xl">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#00dbe9]/20 border-t-[#00dbe9]" />
+          </div>
+          <p className="mt-4 text-sm font-semibold text-[#b9cacb]">
+            Menyiapkan vault...
+          </p>
         </div>
       </main>
     );
@@ -602,47 +644,86 @@ export default function VaultPage() {
 
   if (vaultMode === "create") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#050814] px-6 py-12 text-slate-100">
+      <main className="flex min-h-screen items-center justify-center overflow-hidden bg-[#05070a] px-4 py-10 text-[#e1e2eb] md:px-8">
+        <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(0,219,233,0.14),transparent_30%),radial-gradient(circle_at_80%_12%,rgba(112,0,255,0.1),transparent_24%)]" />
         {toast ? <Toast {...toast} onClose={() => setToast(null)} /> : null}
         <form
           onSubmit={handleCreateVault}
-          className="w-full max-w-md rounded-[2rem] border border-white/10 bg-white/[0.045] p-8 shadow-2xl shadow-cyan-950/20"
+          className="relative w-full max-w-[420px] overflow-hidden rounded-2xl border border-white/10 bg-[#0b0e14]/70 p-6 shadow-[0_22px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl md:p-8"
         >
-          <p className="text-sm font-bold uppercase tracking-[0.22em] text-cyan-200">
+          <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-[#00dbe9]/10 blur-3xl" />
+          <div className="relative z-10 mb-8 flex items-center justify-center">
+            <Shield className="mr-2 h-6 w-6 text-[#00dbe9]" />
+            <span className="text-2xl font-black uppercase tracking-wider text-[#00dbe9]">
+              VaultMind
+            </span>
+          </div>
+          <p className="relative z-10 text-sm font-black uppercase tracking-[0.18em] text-[#00dbe9]">
             Buat Vault
           </p>
-          <h1 className="mt-4 text-3xl font-black text-white">
+          <h1 className="relative z-10 mt-3 text-3xl font-black leading-tight text-[#e1e2eb]">
             Buat master password
           </h1>
-          <p className="mt-3 text-sm leading-6 text-slate-400">
+          <p className="relative z-10 mt-4 text-sm leading-6 text-[#b9cacb]">
             Master password tidak dikirim ke server. Simpan baik-baik, karena
             tanpa ini isi vault tidak bisa dibuka.
           </p>
-          <div className="mt-8 space-y-5">
-            <Input
-              label="Master password"
-              type="password"
-              value={masterPassword}
-              onChange={(event) => setMasterPassword(event.target.value)}
-              placeholder="Minimal 12 karakter"
-            />
+          <div className="relative z-10 mt-8 space-y-5">
+            <label className="block">
+              <span className={labelClass}>Master password</span>
+              <div className="relative">
+                <input
+                  suppressHydrationWarning
+                  type={showMasterPassword ? "text" : "password"}
+                  value={masterPassword}
+                  onChange={(event) => setMasterPassword(event.target.value)}
+                  placeholder="Minimal 12 karakter"
+                  className={`${fieldClass} pr-12`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowMasterPassword((current) => !current)}
+                  className="absolute inset-y-0 right-0 mt-2 flex w-12 items-center justify-center text-[#849495] transition hover:text-[#00dbe9]"
+                  aria-label={
+                    showMasterPassword
+                      ? "Sembunyikan master password"
+                      : "Tampilkan master password"
+                  }
+                >
+                  {showMasterPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
+            </label>
             <PasswordStrengthBar password={masterPassword} />
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#849495]">
               Status: {masterStrength.label}
             </p>
-            <Input
-              label="Konfirmasi master password"
-              type="password"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-            />
-            {error ? <p className="text-sm text-rose-200">{error}</p> : null}
+            <label className="block">
+              <span className={labelClass}>Konfirmasi master password</span>
+              <input
+                suppressHydrationWarning
+                type="password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                className={fieldClass}
+              />
+            </label>
+            {error ? <p className="text-sm text-[#ffb4ab]">{error}</p> : null}
             <button
               disabled={isBusy}
-              className="w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-5 py-3 text-sm font-black text-white disabled:opacity-60"
+              className={`w-full ${primaryButtonClass}`}
             >
+              <KeyRound className="h-4 w-4" />
               {isBusy ? "Membuat..." : "Buat Vault"}
             </button>
+          </div>
+          <div className="relative z-10 mt-8 flex items-center justify-center gap-2 text-xs text-[#b9cacb]/70">
+            <Lock className="h-4 w-4" />
+            <span>End-to-End Encrypted</span>
           </div>
         </form>
       </main>
@@ -651,103 +732,189 @@ export default function VaultPage() {
 
   if (vaultMode === "unlock") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#050814] px-6 py-12 text-slate-100">
+      <main className="flex min-h-screen items-center justify-center overflow-hidden bg-[#05070a] px-4 py-10 text-[#e1e2eb] md:px-8">
+        <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(0,219,233,0.14),transparent_30%),radial-gradient(circle_at_80%_12%,rgba(112,0,255,0.1),transparent_24%)]" />
         {toast ? <Toast {...toast} onClose={() => setToast(null)} /> : null}
-        <form
-          onSubmit={handleUnlockVault}
-          className="w-full max-w-md rounded-[2rem] border border-white/10 bg-white/[0.045] p-8 shadow-2xl shadow-cyan-950/20"
-        >
-          <p className="text-sm font-bold uppercase tracking-[0.22em] text-cyan-200">
-            Unlock Vault
-          </p>
-          <h1 className="mt-4 text-3xl font-black text-white">
-            Masukkan master password
-          </h1>
-          <p className="mt-3 text-sm leading-6 text-slate-400">
-            Vault terenkripsi ditemukan di perangkat atau cloud. Dekripsi hanya
-            dilakukan di browser Anda.
-          </p>
-          <div className="mt-8 space-y-5">
-            <Input
-              label="Master password"
-              type="password"
-              value={masterPassword}
-              onChange={(event) => setMasterPassword(event.target.value)}
-            />
-            {error ? <p className="text-sm text-rose-200">{error}</p> : null}
-            <button
-              disabled={isBusy}
-              className="w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-5 py-3 text-sm font-black text-white disabled:opacity-60"
-            >
-              {isBusy ? "Membuka..." : "Buka Vault"}
-            </button>
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-bold text-slate-200"
-            >
-              Import backup terenkripsi
-            </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="application/json"
-              className="hidden"
-              onChange={handleImportBackup}
-            />
+        <div className="relative w-full max-w-[420px]">
+          <div className="mb-8 flex items-center justify-center">
+            <Shield className="mr-2 h-6 w-6 text-[#00dbe9]" />
+            <h1 className="text-2xl font-black uppercase tracking-wider text-[#00dbe9]">
+              VaultMind
+            </h1>
           </div>
-        </form>
+          <form
+            onSubmit={handleUnlockVault}
+            className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0b0e14]/70 p-6 shadow-[0_22px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl md:p-8"
+          >
+            <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-[#00dbe9]/10 blur-3xl transition group-hover:bg-[#00dbe9]/20" />
+            <p className="relative z-10 text-sm font-black uppercase tracking-[0.18em] text-[#00dbe9]">
+              Unlock Vault
+            </p>
+            <h2 className="relative z-10 mt-3 text-3xl font-black leading-tight text-[#e1e2eb]">
+              Masukkan master password
+            </h2>
+            <p className="relative z-10 mt-4 text-sm leading-6 text-[#b9cacb]">
+              Vault terenkripsi ditemukan di perangkat atau cloud. Dekripsi
+              hanya dilakukan di browser Anda.
+            </p>
+            <div className="relative z-10 mt-8 space-y-5">
+              <label className="block">
+                <span className={labelClass}>Master password</span>
+                <div className="relative">
+                  <input
+                    suppressHydrationWarning
+                    type={showMasterPassword ? "text" : "password"}
+                    value={masterPassword}
+                    onChange={(event) => setMasterPassword(event.target.value)}
+                    placeholder="••••••••"
+                    className={`${fieldClass} pr-12`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowMasterPassword((current) => !current)}
+                    className="absolute inset-y-0 right-0 mt-2 flex w-12 items-center justify-center text-[#849495] transition hover:text-[#00dbe9]"
+                    aria-label={
+                      showMasterPassword
+                        ? "Sembunyikan master password"
+                        : "Tampilkan master password"
+                    }
+                  >
+                    {showMasterPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </label>
+              {error ? <p className="text-sm text-[#ffb4ab]">{error}</p> : null}
+              <div className="space-y-2 pt-2">
+                <button disabled={isBusy} className={`w-full ${primaryButtonClass}`}>
+                  <KeyRound className="h-4 w-4" />
+                  {isBusy ? "Membuka..." : "Buka Vault"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`w-full ${secondaryButtonClass}`}
+                >
+                  <FileUp className="h-4 w-4" />
+                  Import backup terenkripsi
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="application/json"
+                  className="hidden"
+                  onChange={handleImportBackup}
+                />
+              </div>
+            </div>
+          </form>
+          <div className="mt-8 flex items-center justify-center gap-2 text-xs text-[#b9cacb]/70">
+            <Lock className="h-4 w-4" />
+            <span>End-to-End Encrypted</span>
+          </div>
+          <footer className="mt-8 flex flex-col items-center gap-2 border-t border-[#3b494b] pt-4">
+            <div className="flex gap-4 text-xs font-semibold text-[#b9cacb]">
+              <a href="/privacy" className="transition hover:text-[#00dbe9]">
+                Privacy Policy
+              </a>
+              <a href="/terms" className="transition hover:text-[#00dbe9]">
+                Terms of Service
+              </a>
+            </div>
+            <p className="text-[10px] uppercase tracking-widest text-[#849495]/70">
+              VaultMind 2026
+            </p>
+          </footer>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#050814] px-6 py-8 text-slate-100">
+    <main className="min-h-screen overflow-hidden bg-[#05070a] px-4 py-6 text-[#e1e2eb] md:px-8">
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(0,219,233,0.12),transparent_28%),radial-gradient(circle_at_88%_10%,rgba(112,0,255,0.12),transparent_24%),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(0deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[length:auto,auto,88px_88px,88px_88px]" />
       {toast ? <Toast {...toast} onClose={() => setToast(null)} /> : null}
-      <div className="mx-auto max-w-7xl">
-        <header className="flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-white/[0.045] p-6 md:flex-row md:items-center md:justify-between">
+      <div className="relative mx-auto max-w-[1440px]">
+        <header className="rounded-2xl border border-white/10 bg-[#0b0e14]/70 p-5 shadow-[0_22px_80px_rgba(0,0,0,0.34)] backdrop-blur-xl">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-cyan-200">
-              VaultMind
-            </p>
-            <h1 className="mt-2 text-3xl font-black text-white">
+            <div className="flex items-center gap-2">
+              <Shield className="h-6 w-6 text-[#00dbe9]" />
+              <p className="text-sm font-black uppercase tracking-[0.18em] text-[#00dbe9]">
+                VaultMind
+              </p>
+            </div>
+            <h1 className="mt-3 text-3xl font-black text-[#e1e2eb] md:text-4xl">
               {entries.length} entri tersimpan
             </h1>
-            <p className="mt-2 text-sm text-slate-400">
-              Sync status: {syncLabel}
-            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span className={`rounded-full border px-3 py-1 text-xs font-bold ${syncTone}`}>
+                {syncLabel}
+              </span>
+              <span className="rounded-full border border-[#3b494b] bg-[#1d2026] px-3 py-1 text-xs font-bold text-[#b9cacb]">
+                Zero-knowledge
+              </span>
+            </div>
           </div>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={handleGeneratePassword}
-              className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-bold text-slate-100"
+              className={secondaryButtonClass}
             >
+              <Sparkles className="h-4 w-4" />
               Generate
             </button>
             <button
               onClick={handleExportBackup}
-              className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-bold text-slate-100"
+              className={secondaryButtonClass}
             >
+              <Download className="h-4 w-4" />
               Export
             </button>
             <button
               onClick={() => lockVault("Vault dikunci.")}
-              className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-bold text-slate-100"
+              className={secondaryButtonClass}
             >
+              <Lock className="h-4 w-4" />
               Kunci
             </button>
             <button
               onClick={handleDeleteLocalVault}
-              className="rounded-2xl border border-rose-300/20 bg-rose-400/10 px-4 py-3 text-sm font-bold text-rose-100"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#ffb4ab]/30 bg-[#ffb4ab]/10 px-4 py-3 text-sm font-bold text-[#ffb4ab] transition hover:bg-[#ffb4ab]/15"
             >
+              <Trash2 className="h-4 w-4" />
               Hapus lokal
             </button>
             <button
               onClick={handleLogout}
-              className="rounded-2xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-4 py-3 text-sm font-black text-white"
+              className={primaryButtonClass}
             >
+              <LogOut className="h-4 w-4" />
               Logout
             </button>
+          </div>
+          </div>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            {[
+              ["Total Entri", entries.length],
+              ["Kategori Aktif", categoryCount],
+              ["Tagihan", billCount],
+            ].map(([label, value]) => (
+              <div
+                key={label}
+                className="rounded-xl border border-[#3b494b]/70 bg-[#1d2026]/70 p-4"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#849495]">
+                  {label}
+                </p>
+                <p className="mt-2 text-2xl font-black text-[#e1e2eb]">
+                  {value}
+                </p>
+              </div>
+            ))}
           </div>
         </header>
 
@@ -755,9 +922,15 @@ export default function VaultPage() {
           <div className="mt-4">
             <button
               onClick={() => setShowHealth(!showHealth)}
-              className="w-full rounded-2xl border border-slate-800 bg-slate-900/40 px-4 py-3 text-left text-sm font-semibold text-slate-200 hover:border-slate-700 transition-colors"
+              className="flex w-full items-center justify-between rounded-xl border border-[#3b494b] bg-[#0b0e14]/70 px-4 py-3 text-left text-sm font-semibold text-[#e1e2eb] backdrop-blur-xl transition hover:border-[#00dbe9]"
             >
-              {showHealth ? "▾ Sembunyikan" : "▸ Lihat"} Password Health Report
+              <span className="inline-flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-[#00dbe9]" />
+                Password Health Report
+              </span>
+              <span className="text-[#849495]">
+                {showHealth ? "Sembunyikan" : "Lihat"}
+              </span>
             </button>
             {showHealth && (
               <div className="mt-3">
@@ -772,59 +945,96 @@ export default function VaultPage() {
         )}
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[380px_1fr]">
-          <aside className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-6">
-            <h2 className="text-xl font-black text-white">
+          <aside className="rounded-2xl border border-white/10 bg-[#0b0e14]/70 p-5 shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+            <h2 className="text-xl font-black text-[#e1e2eb]">
               {editingId ? "Edit entri" : "Tambah entri"}
             </h2>
             <form onSubmit={handleSaveEntry} className="mt-6 space-y-4">
-              <Input
-                label="Nama layanan"
-                value={form.name}
-                onChange={(event) =>
-                  setForm((current) => ({
-                    ...current,
-                    name: event.target.value,
-                  }))
-                }
-              />
-              <Input
-                label="Username"
-                value={form.username}
-                onChange={(event) =>
-                  setForm((current) => ({
-                    ...current,
-                    username: event.target.value,
-                  }))
-                }
-              />
-              <Input
-                label="Password"
-                type="password"
-                value={form.password}
-                onChange={(event) =>
-                  setForm((current) => ({
-                    ...current,
-                    password: event.target.value,
-                  }))
-                }
-              />
+              <label className="block">
+                <span className={labelClass}>Nama layanan</span>
+                <input
+                  suppressHydrationWarning
+                  value={form.name}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      name: event.target.value,
+                    }))
+                  }
+                  className={fieldClass}
+                />
+              </label>
+              <label className="block">
+                <span className={labelClass}>Username</span>
+                <input
+                  suppressHydrationWarning
+                  value={form.username}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      username: event.target.value,
+                    }))
+                  }
+                  className={fieldClass}
+                />
+              </label>
+              <label className="block">
+                <span className={labelClass}>Password</span>
+                <div className="relative">
+                  <input
+                    suppressHydrationWarning
+                    type={showEntryPassword ? "text" : "password"}
+                    value={form.password}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        password: event.target.value,
+                      }))
+                    }
+                    className={`${fieldClass} pr-12`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowEntryPassword((current) => !current)}
+                    className="absolute inset-y-0 right-0 mt-2 flex w-12 items-center justify-center text-[#849495] transition hover:text-[#00dbe9]"
+                    aria-label={
+                      showEntryPassword
+                        ? "Sembunyikan password entri"
+                        : "Tampilkan password entri"
+                    }
+                  >
+                    {showEntryPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </label>
               <PasswordStrengthBar password={form.password} />
               {form.password ? (
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#849495]">
                   Status: {formPasswordStrength.label}
                 </p>
               ) : null}
-              <Input
-                label="URL"
-                type="url"
-                value={form.url}
-                onChange={(event) =>
-                  setForm((current) => ({ ...current, url: event.target.value }))
-                }
-                placeholder="https://example.com"
-              />
               <label className="block">
-                <span className="text-sm font-bold text-slate-200">Kategori</span>
+                <span className={labelClass}>URL</span>
+                <input
+                  suppressHydrationWarning
+                  type="url"
+                  value={form.url}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      url: event.target.value,
+                    }))
+                  }
+                  placeholder="https://example.com"
+                  className={fieldClass}
+                />
+              </label>
+              <label className="block">
+                <span className={labelClass}>Kategori</span>
                 <select
                   value={form.category}
                   onChange={(event) =>
@@ -833,7 +1043,7 @@ export default function VaultPage() {
                       category: event.target.value as VaultEntry["category"],
                     }))
                   }
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/60"
+                  className={selectClass}
                 >
                   {categories.map((category) => (
                     <option key={category}>{category}</option>
@@ -842,7 +1052,7 @@ export default function VaultPage() {
               </label>
               {form.category === "Tagihan" ? (
                 <label className="block">
-                  <span className="text-sm font-bold text-slate-200">
+                  <span className={labelClass}>
                     Tanggal jatuh tempo (setiap bulan)
                   </span>
                   <select
@@ -853,7 +1063,7 @@ export default function VaultPage() {
                         billingDueDay: event.target.value,
                       }))
                     }
-                    className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/60"
+                    className={selectClass}
                   >
                     <option value="">Pilih tanggal</option>
                     {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
@@ -862,14 +1072,14 @@ export default function VaultPage() {
                       </option>
                     ))}
                   </select>
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-[#849495]">
                     Tagihan ini akan dianggap jatuh tempo setiap tanggal
                     tersebut tiap bulannya.
                   </p>
                 </label>
               ) : null}
               <label className="block">
-                <span className="text-sm font-bold text-slate-200">Catatan</span>
+                <span className={labelClass}>Catatan</span>
                 <textarea
                   value={form.notes}
                   onChange={(event) =>
@@ -879,12 +1089,12 @@ export default function VaultPage() {
                     }))
                   }
                   rows={4}
-                  className="mt-2 w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/60"
+                  className="mt-2 w-full resize-none rounded-lg border border-[#3b494b] bg-[#32353c] px-4 py-3 text-sm font-semibold text-[#e1e2eb] outline-none transition placeholder:text-[#849495] focus:border-[#00dbe9] focus:shadow-[0_0_0_3px_rgba(0,219,233,0.12)]"
                 />
               </label>
               <button
                 disabled={isBusy}
-                className="w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-5 py-3 text-sm font-black text-white disabled:opacity-60"
+                className={`w-full ${primaryButtonClass}`}
               >
                 {editingId ? "Simpan perubahan" : "Simpan entri"}
               </button>
@@ -895,7 +1105,7 @@ export default function VaultPage() {
                     setEditingId(null);
                     setForm(emptyForm);
                   }}
-                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-bold text-slate-200"
+                  className={`w-full ${secondaryButtonClass}`}
                 >
                   Batal edit
                 </button>
@@ -903,18 +1113,22 @@ export default function VaultPage() {
             </form>
           </aside>
 
-          <section className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-6">
+          <section className="rounded-2xl border border-white/10 bg-[#0b0e14]/60 p-5 shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl">
             <div className="flex flex-col gap-4 md:flex-row">
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Cari name, username, URL, kategori..."
-                className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/60"
-              />
+              <div className="relative min-w-0 flex-1">
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#849495]" />
+                <input
+                  suppressHydrationWarning
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Cari nama, username, URL, kategori..."
+                  className="w-full rounded-lg border border-[#3b494b] bg-[#32353c] py-3 pl-11 pr-4 text-sm font-semibold text-[#e1e2eb] outline-none transition placeholder:text-[#849495] focus:border-[#00dbe9] focus:shadow-[0_0_0_3px_rgba(0,219,233,0.12)]"
+                />
+              </div>
               <select
                 value={activeCategory}
                 onChange={(event) => setActiveCategory(event.target.value)}
-                className="rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/60"
+                className="rounded-lg border border-[#3b494b] bg-[#32353c] px-4 py-3 text-sm font-semibold text-[#e1e2eb] outline-none transition focus:border-[#00dbe9] focus:shadow-[0_0_0_3px_rgba(0,219,233,0.12)]"
               >
                 <option value="all">Semua kategori</option>
                 {categories.map((category) => (
@@ -943,7 +1157,7 @@ export default function VaultPage() {
                     />
                     <button
                       onClick={() => setHistoryEntry(entry)}
-                      className="absolute right-3 top-3 rounded-lg bg-slate-800/80 px-2.5 py-1 text-[10px] font-semibold text-slate-400 opacity-0 group-hover:opacity-100 hover:bg-slate-700 hover:text-slate-200 transition-all"
+                      className="absolute right-3 top-3 rounded-full border border-[#3b494b] bg-[#1d2026]/90 px-2.5 py-1 text-[10px] font-semibold text-[#b9cacb] opacity-0 transition-all hover:border-[#00dbe9] hover:text-[#00dbe9] group-hover:opacity-100"
                       title="Riwayat password"
                     >
                       Riwayat
