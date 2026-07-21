@@ -192,7 +192,7 @@ function PrimaryCta({
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#050814] text-slate-100">
+    <main className="min-h-screen bg-[#050814] text-slate-100">
       <div className="absolute inset-x-0 top-0 -z-0 h-[560px] bg-[radial-gradient(circle_at_20%_10%,rgba(79,70,229,0.24),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(34,211,238,0.18),transparent_32%)]" />
       <div className="relative z-10">
         <nav className="border-b border-white/10 bg-[#050814]/80 backdrop-blur-xl">
@@ -215,28 +215,28 @@ export default function Home() {
           </div>
         </nav>
 
-        <section className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 lg:grid-cols-[1fr_0.95fr] lg:py-24">
-          <div>
-            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold text-cyan-200">
-              <span className="h-2 w-2 rounded-full bg-cyan-300" />
+        <section className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1fr_0.95fr] lg:gap-12 lg:py-24">
+          <div className="min-h-0 lg:pr-6">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-[11px] font-bold text-cyan-200 sm:mb-7 sm:px-4 sm:py-2 sm:text-xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 sm:h-2 sm:w-2" />
               Zero-knowledge password manager
             </div>
-            <p className="mb-5 text-sm font-bold uppercase tracking-[0.22em] text-indigo-200/80">
+            <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.16em] text-indigo-200/80 sm:mb-5 sm:text-sm sm:tracking-[0.22em]">
               Satu kunci. Semua rahasia. Aman selamanya.
             </p>
-            <h1 className="max-w-3xl text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-3xl text-2xl font-black leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl xl:text-6xl">
               Kelola semua password penting{" "}
               <span className="bg-gradient-to-r from-indigo-300 via-cyan-300 to-emerald-300 bg-clip-text text-transparent">
                 tanpa menyerahkan rahasia Anda ke server.
               </span>
             </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300 sm:mt-6 sm:text-base sm:leading-8 lg:text-lg">
               VaultMind menyimpan password, token, PIN, dan catatan sensitif
               dalam vault terenkripsi. Proses enkripsi dan dekripsi dilakukan di
               sisi pengguna, sehingga server hanya menerima data yang sudah
               terkunci.
             </p>
-            <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-6 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:gap-4">
               <PrimaryCta>Mulai Gratis</PrimaryCta>
               <Link
                 href="#cara-kerja"
@@ -245,13 +245,14 @@ export default function Home() {
                 Lihat cara kerjanya
               </Link>
             </div>
-            <p className="mt-6 text-sm font-medium text-slate-400">
+            <p className="mt-4 text-xs font-medium text-slate-400 sm:mt-6 sm:text-sm">
               Tidak ada plaintext password yang dikirim ke server.
             </p>
           </div>
 
-          <div className="rounded-[2rem] border border-white/12 bg-white/[0.045] p-4 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl">
-            <div className="rounded-[1.5rem] border border-white/10 bg-[#080d19]/90 p-5">
+          <div className="mt-6 hidden min-h-0 lg:mt-0 lg:block">
+          <div className="rounded-2xl border border-white/12 bg-white/[0.045] p-3 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl sm:rounded-[2rem] sm:p-4">
+            <div className="rounded-2xl border border-white/10 bg-[#080d19]/90 p-4 sm:rounded-[1.5rem] sm:p-5">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-3">
@@ -318,6 +319,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </section>
 
